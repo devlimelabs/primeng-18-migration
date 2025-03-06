@@ -1,0 +1,10 @@
+{
+  "$schema": "../node_modules/@angular-devkit/schematics/collection-schema.json",
+  "schematics": {
+    "migrateToV18": {
+      "description": "Migrate from PrimeNG v17 to v18",
+      "factory": "./primeng-schematics-migration#migrateToV18",
+      "schema": "./schema.json"
+    }
+  }
+} 

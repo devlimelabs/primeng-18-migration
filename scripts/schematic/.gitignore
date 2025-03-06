@@ -1,0 +1,11 @@
+ node_modules/
+*.js
+*.js.map
+*.d.ts
+!*.spec.js
+!jest.config.js
+.DS_Store
+.idea
+.vscode
+npm-debug.log
+yarn-error.log

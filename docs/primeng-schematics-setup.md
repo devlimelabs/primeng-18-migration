@@ -117,58 +117,97 @@
 }
 
 // README.md - Instructions for using the schematics
-# PrimeNG v17 to v18 Migration Schematics
+# PrimeNG Schematics Setup Guide
 
-This package provides Angular schematics to migrate your project from PrimeNG v17 to v18.
+This guide will help you set up and use the PrimeNG v18 migration schematic in your Angular project.
+
+## Prerequisites
+
+- Node.js 16.x or higher
+- Angular CLI 18.x or higher
+- PrimeNG v17.x installed in your project
 
 ## Installation
 
+### Option 1: Install from NPM (when published)
+
 ```bash
-npm install -g primeng-migration-schematics
+npm install -g primeng-schematics-migration
+```
+
+### Option 2: Use Locally
+
+1. Clone the repository:
+```bash
+git clone https://github.com/your-org/primeng-18-migration.git
+cd primeng-18-migration/scripts/schematic
+```
+
+2. Install dependencies:
+```bash
+npm install
+```
+
+3. Build the schematic:
+```bash
+npm run build
 ```
 
 ## Usage
 
-### Automated Migration
+### Using with Angular CLI
 
-To run the complete migration:
-
-```bash
-ng update primeng --migrate-only --from=17 --to=18
-```
-
-Or use the schematics directly:
+From your Angular project root directory, run:
 
 ```bash
-ng generate primeng-migration-schematics:ng-update
+ng generate ./path/to/primeng-18-migration/scripts/schematic:migrateToV18
 ```
 
-### Individual Migration Steps
-
-You can also run individual migration steps:
+If you've installed the package globally:
 
 ```bash
-# Update module imports
-ng generate primeng-migration-schematics:update-modules
-
-# Update CSS classes
-ng generate primeng-migration-schematics:update-css
-
-# Update component properties
-ng generate primeng-migration-schematics:update-properties
-
-# Update Dialog component
-ng generate primeng-migration-schematics:update-dialog
-
-# Update SelectButton component
-ng generate primeng-migration-schematics:update-selectbutton
+ng generate primeng-schematics-migration:migrateToV18
 ```
 
-## Features
+### Available Options
 
-- Updates module imports
-- Updates CSS classes
-- Updates component properties
-- Updates Dialog component API
-- Updates SelectButton component
-- Git integration (stashing and committing changes)
+You can customize the migration with the following options:
+
+```bash
+ng generate primeng-schematics-migration:migrateToV18 --skipGitCheck=true --skipCommit=true
+```
+
+- `--skipGitCheck`: Skip checking for unstaged Git changes (default: false)
+- `--skipCommit`: Skip committing changes after migration (default: false)
+
+## What the Schematic Does
+
+The schematic performs the following migrations:
+
+1. Updates PrimeNG dependency to v18 and PrimeFlex to v4 (if present)
+2. Updates import paths for renamed components
+3. Updates component selectors in templates
+4. Updates CSS classes according to v18 changes
+5. Updates component properties and APIs
+6. Removes deprecated theme imports from angular.json
+7. Updates directives to their new names
+
+## Verification
+
+After running the schematic, you should:
+
+1. Review the changes made to your codebase
+2. Run your application to verify it works correctly
+3. Run your tests to ensure functionality is preserved
+
+## Troubleshooting
+
+If you encounter issues during migration:
+
+1. Check the console output for warnings and errors
+2. Review the changes made by the schematic
+3. Consult the [PrimeNG v18 Migration Guide](https://primeng.org/migration/v18) for manual steps
+
+## Contributing
+
+Contributions to improve the schematic are welcome! Please submit a pull request with your changes.

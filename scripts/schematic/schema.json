@@ -1,0 +1,19 @@
+{
+  "$schema": "http://json-schema.org/schema",
+  "id": "PrimeNGMigrationSchematic",
+  "title": "PrimeNG v18 Migration",
+  "type": "object",
+  "properties": {
+    "skipGitCheck": {
+      "type": "boolean",
+      "description": "Skip checking for unstaged Git changes",
+      "default": false
+    },
+    "skipCommit": {
+      "type": "boolean",
+      "description": "Skip committing changes after migration",
+      "default": false
+    }
+  },
+  "required": []
+} 
