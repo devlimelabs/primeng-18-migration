@@ -1,17 +1,23 @@
 {
   "name": "primeng-18-migrate",
-  "version": "0.0.0",
-  "description": "A blank schematics",
+  "version": "0.0.5",
+  "description": "PrimeNG 18 Migration Tool",
   "scripts": {
     "build": "tsc -p tsconfig.json",
     "test": "npm run build && jasmine src/**/*_spec.js"
   },
   "keywords": [
-    "schematics"
+    "schematics",
+    "primeng",
+    "angular",
+    "migration"
   ],
   "author": "",
   "license": "MIT",
   "schematics": "./src/collection.json",
+  "ng-add": {
+    "save": "devDependencies"
+  },
   "dependencies": {
     "@angular-devkit/core": "^19.2.1",
     "@angular-devkit/schematics": "^19.2.1",

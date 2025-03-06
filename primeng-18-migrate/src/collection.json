@@ -1,9 +1,36 @@
 {
   "$schema": "../node_modules/@angular-devkit/schematics/collection-schema.json",
   "schematics": {
+    "ng-add": {
+      "description": "Add primeng-18-migrate schematic",
+      "factory": "./primeng-18-migrate/index#migrateToV18",
+      "schema": "./primeng-18-migrate/schema.json"
+    },
     "primeng-18-migrate": {
       "description": "Migrate from PrimeNG v17 to v18",
-      "factory": "./primeng-18-migrate/index#migrateToV18"
+      "factory": "./primeng-18-migrate/index#migrateToV18",
+      "schema": "./primeng-18-migrate/schema.json",
+      "aliases": ["migrate"]
+    },
+    "update-dependencies": {
+      "description": "Update dependencies for PrimeNG v18",
+      "factory": "./primeng-18-migrate/migrations/dependencies/index#updateDependencies"
+    },
+    "dropdown-to-select": {
+      "description": "Migrate Dropdown to Select component",
+      "factory": "./primeng-18-migrate/migrations/dropdown-select/index#migrateDropdownToSelect"
+    },
+    "update-dialog": {
+      "description": "Update Dialog component for PrimeNG v18",
+      "factory": "./primeng-18-migrate/migrations/dialog/index#updateDialogComponent"
+    },
+    "update-angular-config": {
+      "description": "Update Angular configuration for PrimeNG v18",
+      "factory": "./primeng-18-migrate/migrations/angular-config/index#updateAngularConfig"
+    },
+    "update-directives": {
+      "description": "Update PrimeNG directives for v18",
+      "factory": "./primeng-18-migrate/migrations/directives/index#updateDirectives"
     }
   }
 }
