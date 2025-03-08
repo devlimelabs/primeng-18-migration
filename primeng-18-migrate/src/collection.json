@@ -20,6 +20,22 @@
       "description": "Migrate Dropdown to Select component",
       "factory": "./primeng-18-migrate/migrations/dropdown-select/index#migrateDropdownToSelect"
     },
+    "calendar-to-datepicker": {
+      "description": "Migrate Calendar to DatePicker component",
+      "factory": "./primeng-18-migrate/migrations/calendar-datepicker/index#migrateCalendarToDatePicker"
+    },
+    "inputswitch-to-toggleswitch": {
+      "description": "Migrate InputSwitch to ToggleSwitch component",
+      "factory": "./primeng-18-migrate/migrations/inputswitch-toggleswitch/index#migrateInputSwitchToToggleSwitch"
+    },
+    "overlaypanel-to-popover": {
+      "description": "Migrate OverlayPanel to Popover component",
+      "factory": "./primeng-18-migrate/migrations/overlaypanel-popover/index#migrateOverlayPanelToPopover"
+    },
+    "sidebar-to-drawer": {
+      "description": "Migrate Sidebar to Drawer component",
+      "factory": "./primeng-18-migrate/migrations/sidebar-drawer/index#migrateSidebarToDrawer"
+    },
     "update-dialog": {
       "description": "Update Dialog component for PrimeNG v18",
       "factory": "./primeng-18-migrate/migrations/dialog/index#updateDialogComponent"

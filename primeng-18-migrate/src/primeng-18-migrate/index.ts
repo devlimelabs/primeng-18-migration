@@ -2,10 +2,14 @@ import { chain, Rule, SchematicContext, SchematicsException, Tree } from '@angul
 import { NodePackageInstallTask } from '@angular-devkit/schematics/tasks';
 
 import { updateAngularConfig } from './migrations/angular-config';
+import { migrateCalendarToDatePicker } from './migrations/calendar-datepicker';
 import { updateDependencies } from './migrations/dependencies';
 import { updateDialogComponent } from './migrations/dialog';
 import { updateDirectives } from './migrations/directives';
 import { migrateDropdownToSelect } from './migrations/dropdown-select';
+import { migrateInputSwitchToToggleSwitch } from './migrations/inputswitch-toggleswitch';
+import { migrateOverlayPanelToPopover } from './migrations/overlaypanel-popover';
+import { migrateSidebarToDrawer } from './migrations/sidebar-drawer';
 import { Schema } from './schema';
 import { commitChanges, hasUnstagedChanges, stashChanges } from './utils/git-utils';
 
@@ -44,6 +48,10 @@ export function migrateToV18(options: Schema = {}): Rule {
       
       // Component migrations
       migrateDropdownToSelect(),
+      migrateCalendarToDatePicker(),
+      migrateInputSwitchToToggleSwitch(),
+      migrateOverlayPanelToPopover(),
+      migrateSidebarToDrawer(),
       updateDialogComponent(),
       
       // Configuration updates
