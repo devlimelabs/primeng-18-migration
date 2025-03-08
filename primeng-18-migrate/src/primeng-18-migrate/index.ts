@@ -41,14 +41,22 @@ export function migrateToV18(options: Schema = {}): Rule {
       context.logger.info('Unstaged changes have been stashed.');
     }
 
+    // Create options for the child migrations to indicate they're part of a parent migration
+    const childMigrationOptions: Schema = {
+      ...options,
+      skipGitCheck: true, // Skip Git checks in child migrations
+      skipCommit: true,   // Skip commits in child migrations
+      partOfParentMigration: true // Flag to indicate it's part of a parent migration
+    };
+
     // Chain all the migration rules
     const migrationRules = chain([
       // Update dependencies
       updateDependencies(),
       
       // Component migrations
-      migrateDropdownToSelect(),
-      migrateCalendarToDatePicker(),
+      migrateDropdownToSelect(childMigrationOptions),
+      migrateCalendarToDatePicker(childMigrationOptions),
       migrateInputSwitchToToggleSwitch(),
       migrateOverlayPanelToPopover(),
       migrateSidebarToDrawer(),

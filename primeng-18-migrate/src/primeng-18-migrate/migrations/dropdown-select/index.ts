@@ -1,6 +1,7 @@
 import { Rule, SchematicContext, Tree } from '@angular-devkit/schematics';
 import { execSync } from 'child_process';
 
+import { Schema } from '../../schema';
 import { analyzeFilesForMigration } from '../../utils/file-utils';
 import { promptConfirm } from '../../utils/prompt-utils';
 
@@ -54,26 +55,31 @@ function commitGitChanges(message: string, logger: SchematicContext['logger']): 
  * - Updates component selectors from p-dropdown to p-select
  * - Updates CSS classes
  */
-export function migrateDropdownToSelect(): Rule {
+export function migrateDropdownToSelect(options: Schema = {}): Rule {
   // Track if we had unstaged changes at the start
   let hadUnstagedChanges = false;
   
   return async (tree: Tree, context: SchematicContext) => {
-    const confirmation = await promptConfirm(
-      'Do you want to migrate Dropdown to Select?'
-    );
-
-    if (!confirmation) {
-      context.logger.info('Skipping Dropdown to Select migration');
-      return tree;
+    // Skip the confirmation prompt if this is part of a parent migration
+    let proceed = true;
+    if (!options.partOfParentMigration) {
+      proceed = await promptConfirm('Do you want to migrate Dropdown to Select?');
+      
+      if (!proceed) {
+        context.logger.info('Skipping Dropdown to Select migration');
+        return tree;
+      }
     }
 
-    // Check for unstaged changes before beginning
-    hadUnstagedChanges = hasGitChanges();
-    if (hadUnstagedChanges) {
-      context.logger.warn('Unstaged Git changes detected. Changes made by this migration will not be auto-committed.');
-    } else {
-      context.logger.info('No unstaged Git changes detected. You will be prompted to commit changes after migration.');
+    // Skip Git checks if this is part of a parent migration or skipGitCheck is true
+    if (!options.partOfParentMigration && !options.skipGitCheck) {
+      // Check for unstaged changes before beginning
+      hadUnstagedChanges = hasGitChanges();
+      if (hadUnstagedChanges) {
+        context.logger.warn('Unstaged Git changes detected. Changes made by this migration will not be auto-committed.');
+      } else {
+        context.logger.info('No unstaged Git changes detected. You will be prompted to commit changes after migration.');
+      }
     }
 
     context.logger.info('Migrating Dropdown to Select...');
@@ -88,6 +94,11 @@ export function migrateDropdownToSelect(): Rule {
     updateCssClasses(tree, context);
     
     context.logger.info('Dropdown to Select migration completed');
+
+    // Skip commit operations if this is part of a parent migration or skipCommit is true
+    if (options.partOfParentMigration || options.skipCommit) {
+      return tree;
+    }
 
     // Return a rule that will commit changes after the Tree has been processed
     return async (finalTree: Tree, finalContext: SchematicContext) => {
@@ -152,6 +163,7 @@ function updateModuleImports(tree: Tree, context: SchematicContext): void {
     // Replace module imports
     let updatedContent = content
       .replace(/DropdownModule/g, 'SelectModule')
+      .replace(/DropdownChangeEvent/g, 'SelectChangeEvent')
       .replace(/from ['"]primeng\/dropdown['"]/g, 'from \'primeng/select\'');
     
     // Replace any direct imports from the dropdown module

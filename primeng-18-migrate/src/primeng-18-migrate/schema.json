@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/schema",
-  "id": "PrimeNGMigrationSchematic",
+  "$id": "PrimeNGMigrationSchematic",
   "title": "PrimeNG v18 Migration Options",
   "type": "object",
   "properties": {
