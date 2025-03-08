@@ -2,18 +2,18 @@ import { Rule, SchematicContext, Tree } from '@angular-devkit/schematics';
 import { NodePackageInstallTask } from '@angular-devkit/schematics/tasks';
 
 import { addPackageJsonDependency, NodeDependencyType, PackageDependency } from '../../utils/package-utils';
-import { promptForConfirmation } from '../../utils/prompt-utils';
+import { promptConfirm } from '../../utils/prompt-utils';
 
 /**
  * Updates package.json dependencies for PrimeNG v18
  */
 export function updateDependencies(): Rule {
   return async (tree: Tree, context: SchematicContext) => {
-    const confirmation = await promptForConfirmation(
+    const confirmation = await promptConfirm(
       'Do you want to update dependencies for PrimeNG v18?'
     );
 
-    if (confirmation !== 'run') {
+    if (!confirmation) {
       context.logger.info('Skipping dependency updates');
       return tree;
     }
@@ -31,7 +31,7 @@ export function updateDependencies(): Rule {
       {
         type: NodeDependencyType.Default,
         name: 'primeicons',
-        version: '^7.0.0',
+        version: '^6.0.0',
         overwrite: true
       },
       {

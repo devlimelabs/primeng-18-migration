@@ -14,10 +14,12 @@ export function analyzeFilesForMigration(
 
   tree.root.visit((filePath) => {
     if (
-      filePath.endsWith('.ts') || 
-      filePath.endsWith('.html') || 
-      filePath.endsWith('.scss') || 
-      filePath.endsWith('.css')
+      filePath.startsWith('/src/') && (
+        filePath.endsWith('.ts') || 
+        filePath.endsWith('.html') || 
+        filePath.endsWith('.scss') || 
+        filePath.endsWith('.css')
+      )
     ) {
       const content = tree.read(filePath);
       if (content) {

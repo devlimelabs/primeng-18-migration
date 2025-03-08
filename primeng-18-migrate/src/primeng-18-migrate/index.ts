@@ -8,7 +8,6 @@ import { updateDirectives } from './migrations/directives';
 import { migrateDropdownToSelect } from './migrations/dropdown-select';
 import { Schema } from './schema';
 import { commitChanges, hasUnstagedChanges, stashChanges } from './utils/git-utils';
-import { setupTestMode } from './utils/prompt-utils';
 
 /**
  * PrimeNG v17 to v18 Migration Schematics
@@ -78,9 +77,6 @@ export function migrateToV18(options: Schema = {}): Rule {
     return result;
   };
 }
-
-// Export utility functions for testing
-export { setupTestMode };
 
 // Default rule
 export default migrateToV18; 

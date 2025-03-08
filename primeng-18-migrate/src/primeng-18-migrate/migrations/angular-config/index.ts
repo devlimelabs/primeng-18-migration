@@ -1,17 +1,17 @@
 import { Rule, SchematicContext, Tree } from '@angular-devkit/schematics';
 
-import { promptForConfirmation } from '../../utils/prompt-utils';
+import { promptConfirm } from '../../utils/prompt-utils';
 
 /**
  * Updates Angular configuration for PrimeNG v18
  */
 export function updateAngularConfig(): Rule {
   return async (tree: Tree, context: SchematicContext) => {
-    const confirmation = await promptForConfirmation(
+    const confirmed = await promptConfirm(
       'Do you want to update Angular configuration for PrimeNG v18?'
     );
 
-    if (confirmation !== 'run') {
+    if (!confirmed) {
       context.logger.info('Skipping Angular configuration updates');
       return tree;
     }

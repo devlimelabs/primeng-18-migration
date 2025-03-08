@@ -1,18 +1,18 @@
 import { Rule, SchematicContext, Tree } from '@angular-devkit/schematics';
 
 import { analyzeFilesForMigration } from '../../utils/file-utils';
-import { promptForConfirmation } from '../../utils/prompt-utils';
+import { promptConfirm } from '../../utils/prompt-utils';
 
 /**
  * Updates PrimeNG directives for v18
  */
 export function updateDirectives(): Rule {
   return async (tree: Tree, context: SchematicContext) => {
-    const confirmation = await promptForConfirmation(
+    const confirmation = await promptConfirm(
       'Do you want to update PrimeNG directives for v18?'
     );
 
-    if (confirmation !== 'run') {
+    if (!confirmation) {
       context.logger.info('Skipping directive updates');
       return tree;
     }
