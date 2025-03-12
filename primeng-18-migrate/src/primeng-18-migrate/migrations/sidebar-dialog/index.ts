@@ -212,7 +212,7 @@ function updateComponentProperties(tree: Tree, context: SchematicContext): void 
     // Sidebar position (left, right, top, bottom) to Dialog position (left, right, top, bottom, topleft, topright, bottomleft, bottomright)
     updatedContent = updatedContent.replace(
       /\[position\]="([^"]*)"/g,
-      (match: string, position: string) => {
+      (_match: string, position: string) => {
         // Add a comment about the position property change
         return `[position]="${position}" <!-- Note: Dialog position has more options than Sidebar: left, right, top, bottom, topleft, topright, bottomleft, bottomright -->`;
       }

@@ -144,7 +144,7 @@ function migratePDeferToAngularDefer(tree: Tree, context: SchematicContext): voi
     // Replace *pDefer with *ngIf with defer
     updatedContent = updatedContent.replace(
       /<([^>]*)\s+\*pDefer(?:="([^"]*)")?\s*([^>]*)>/g,
-      (match: string, elementStart: string, condition: string, elementEnd: string) => {
+      (_match: string, elementStart: string, condition: string, elementEnd: string) => {
         // If there's a condition, use it with ngIf
         if (condition) {
           return `<!-- MIGRATION NOTICE: pDefer has been replaced with Angular's defer -->
@@ -159,7 +159,7 @@ function migratePDeferToAngularDefer(tree: Tree, context: SchematicContext): voi
     // Replace [pDefer] with *ngIf with defer
     updatedContent = updatedContent.replace(
       /<([^>]*)\s+\[pDefer\]="([^"]*)"([^>]*)>/g,
-      (match: string, elementStart: string, condition: string, elementEnd: string) => {
+      (_match: string, elementStart: string, condition: string, elementEnd: string) => {
         return `<!-- MIGRATION NOTICE: pDefer has been replaced with Angular's defer -->
                <${elementStart} *ngIf="${condition}; defer" ${elementEnd}>`;
       }

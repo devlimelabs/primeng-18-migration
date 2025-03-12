@@ -164,7 +164,7 @@ function updateComponentSelectors(tree: Tree, context: SchematicContext): void {
     // Add a comment for manual review
     updatedContent = updatedContent.replace(
       /<p-messages([^>]*)>/g,
-      (match, attributes) => {
+      (match, _attributes) => {
         return `<!-- MIGRATION NOTICE: Messages to Message migration requires manual changes.
                The Messages component was a wrapper for multiple messages, but now you need to use
                individual Message components. Example:
