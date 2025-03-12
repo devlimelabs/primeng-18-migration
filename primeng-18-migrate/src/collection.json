@@ -36,6 +36,18 @@
       "description": "Migrate Sidebar to Drawer component",
       "factory": "./primeng-18-migrate/migrations/sidebar-drawer/index#migrateSidebarToDrawer"
     },
+    "sidebar-to-dialog": {
+      "description": "Migrate Sidebar to Dialog component",
+      "factory": "./primeng-18-migrate/migrations/sidebar-dialog/index#migrateSidebarToDialog"
+    },
+    "inlinemessage-to-message": {
+      "description": "Migrate InlineMessage to Message component",
+      "factory": "./primeng-18-migrate/migrations/inlinemessage-message/index#migrateInlineMessageToMessage"
+    },
+    "chips-to-autocomplete": {
+      "description": "Migrate Chips to AutoComplete component",
+      "factory": "./primeng-18-migrate/migrations/chips-autocomplete/index#migrateChipsToAutoComplete"
+    },
     "update-dialog": {
       "description": "Update Dialog component for PrimeNG v18",
       "factory": "./primeng-18-migrate/migrations/dialog/index#updateDialogComponent"

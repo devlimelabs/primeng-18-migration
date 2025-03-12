@@ -3,12 +3,15 @@ import { NodePackageInstallTask } from '@angular-devkit/schematics/tasks';
 
 import { updateAngularConfig } from './migrations/angular-config';
 import { migrateCalendarToDatePicker } from './migrations/calendar-datepicker';
+import { migrateChipsToAutoComplete } from './migrations/chips-autocomplete';
 import { updateDependencies } from './migrations/dependencies';
 import { updateDialogComponent } from './migrations/dialog';
 import { updateDirectives } from './migrations/directives';
 import { migrateDropdownToSelect } from './migrations/dropdown-select';
+import { migrateInlineMessageToMessage } from './migrations/inlinemessage-message';
 import { migrateInputSwitchToToggleSwitch } from './migrations/inputswitch-toggleswitch';
 import { migrateOverlayPanelToPopover } from './migrations/overlaypanel-popover';
+import { migrateSidebarToDialog } from './migrations/sidebar-dialog';
 import { migrateSidebarToDrawer } from './migrations/sidebar-drawer';
 import { Schema } from './schema';
 import { commitChanges, hasUnstagedChanges, stashChanges } from './utils/git-utils';
@@ -60,6 +63,9 @@ export function migrateToV18(options: Schema = {}): Rule {
       migrateInputSwitchToToggleSwitch(),
       migrateOverlayPanelToPopover(),
       migrateSidebarToDrawer(),
+      migrateSidebarToDialog(),
+      migrateInlineMessageToMessage(),
+      migrateChipsToAutoComplete(),
       updateDialogComponent(),
       
       // Configuration updates
@@ -81,7 +87,7 @@ export function migrateToV18(options: Schema = {}): Rule {
 
     // Commit changes if not skipped
     if (!options.skipCommit) {
-      const committed = commitChanges('PrimeNG v18 migration');
+      const committed = commitChanges('PrimeNG v18 migration', context.logger);
       if (committed) {
         context.logger.info('Changes have been committed.');
       } else {
