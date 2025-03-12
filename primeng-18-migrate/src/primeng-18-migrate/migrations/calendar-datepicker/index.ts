@@ -1,53 +1,9 @@
 import { Rule, SchematicContext, Tree } from '@angular-devkit/schematics';
-import { execSync } from 'child_process';
 
 import { Schema } from '../../schema';
 import { analyzeFilesForMigration } from '../../utils/file-utils';
+import { commitChanges, hasUnstagedChanges } from '../../utils/git-utils';
 import { promptConfirm } from '../../utils/prompt-utils';
-
-/**
- * Check if there are unstaged changes in the Git repository
- */
-function hasGitChanges(): boolean {
-  try {
-    const output = execSync('git status --porcelain', { encoding: 'utf8' });
-    return output.trim().length > 0;
-  } catch (error) {
-    console.error('Error checking Git status:', error);
-    return false;
-  }
-}
-
-/**
- * Commit changes to the Git repository
- */
-function commitGitChanges(message: string, logger: SchematicContext['logger']): boolean {
-  try {
-    logger.info('Staging all changes for commit...');
-    execSync('git add --all', { 
-      encoding: 'utf8',
-      stdio: 'pipe' 
-    });
-    
-    // Check if there are changes to commit
-    const statusOutput = execSync('git status --porcelain', { encoding: 'utf8' });
-    if (statusOutput.trim().length === 0) {
-      logger.info('No changes to commit');
-      return false;
-    }
-    
-    logger.info(`Committing with message: "${message}"`);
-    execSync(`git commit -m "${message}"`, { 
-      encoding: 'utf8',
-      stdio: 'pipe'
-    });
-    
-    return true;
-  } catch (error) {
-    logger.error(`Error committing changes: ${error}`);
-    return false;
-  }
-}
 
 /**
  * Migrates PrimeNG Calendar to DatePicker
@@ -74,7 +30,7 @@ export function migrateCalendarToDatePicker(options: Schema = {}): Rule {
     // Skip Git checks if this is part of a parent migration or skipGitCheck is true
     if (!options.partOfParentMigration && !options.skipGitCheck) {
       // Check for unstaged changes before beginning
-      hadUnstagedChanges = hasGitChanges();
+      hadUnstagedChanges = hasUnstagedChanges();
       if (hadUnstagedChanges) {
         context.logger.warn('Unstaged Git changes detected. Changes made by this migration will not be auto-committed.');
       } else {
@@ -118,7 +74,7 @@ export function migrateCalendarToDatePicker(options: Schema = {}): Rule {
           // We need to add a small delay to ensure the file system is synced
           // and the git operations work correctly
           setTimeout(() => {
-            const commitSuccess = commitGitChanges(
+            const commitSuccess = commitChanges(
               'feat(primeng18): migrate Calendar to DatePicker component', 
               finalContext.logger
             );

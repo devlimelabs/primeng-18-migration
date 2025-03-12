@@ -1,3 +1,4 @@
+import { SchematicContext } from '@angular-devkit/schematics';
 import { execSync } from 'child_process';
 
 /**
@@ -34,44 +35,30 @@ export function stashChanges(): boolean {
  * @param verbose Whether to output verbose information
  * @returns True if the commit was successful
  */
-export function commitChanges(message: string, options?: { verbose?: boolean }): boolean {
-  const verbose = options?.verbose || false;
-  
+export function commitChanges(message: string, logger: SchematicContext['logger']): boolean {
   try {
-    // Stage all changes
-    if (verbose) {
-      console.log('Staging changes...');
-    }
-    
+    logger.info('Staging all changes for commit...');
     execSync('git add --all', { 
       encoding: 'utf8',
-      stdio: verbose ? 'inherit' : 'pipe'
+      stdio: 'pipe' 
     });
     
     // Check if there are changes to commit
     const statusOutput = execSync('git status --porcelain', { encoding: 'utf8' });
     if (statusOutput.trim().length === 0) {
-      console.log('No changes to commit');
+      logger.info('No changes to commit');
       return false;
     }
     
-    // Execute commit
-    if (verbose) {
-      console.log(`Committing with message: "${message}"`);
-    }
-    
+    logger.info(`Committing with message: "${message}"`);
     execSync(`git commit -m "${message}"`, { 
       encoding: 'utf8',
-      stdio: verbose ? 'inherit' : 'pipe'
+      stdio: 'pipe'
     });
-    
-    if (verbose) {
-      console.log('Changes committed successfully');
-    }
     
     return true;
   } catch (error) {
-    console.error('Error committing changes:', error);
+    logger.error(`Error committing changes: ${error}`);
     return false;
   }
 } 
