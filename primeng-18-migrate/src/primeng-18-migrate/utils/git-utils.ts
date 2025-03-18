@@ -32,28 +32,33 @@ export function stashChanges(): boolean {
 /**
  * Stage and commit changes to the Git repository
  * @param message The commit message
- * @param verbose Whether to output verbose information
+ * @param logger Logger to use for output
  * @returns True if the commit was successful
  */
 export function commitChanges(message: string, logger: SchematicContext['logger']): boolean {
   try {
     logger.info('Staging all changes for commit...');
+    // Use synchronous execution to ensure proper execution
     execSync('git add --all', { 
       encoding: 'utf8',
-      stdio: 'pipe' 
+      stdio: 'inherit'
     });
     
     // Check if there are changes to commit
-    const statusOutput = execSync('git status --porcelain', { encoding: 'utf8' });
+    const statusOutput = execSync('git status --porcelain', { 
+      encoding: 'utf8'
+    });
+    
     if (statusOutput.trim().length === 0) {
       logger.info('No changes to commit');
       return false;
     }
     
     logger.info(`Committing with message: "${message}"`);
+    // Use synchronous execution to ensure proper execution
     execSync(`git commit -m "${message}"`, { 
       encoding: 'utf8',
-      stdio: 'pipe'
+      stdio: 'inherit'
     });
     
     return true;

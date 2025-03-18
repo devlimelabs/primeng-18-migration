@@ -1,20 +1,40 @@
 import { Rule, SchematicContext, Tree } from '@angular-devkit/schematics';
 
+import { Schema } from '../../schema';
 import { analyzeFilesForMigration } from '../../utils/file-utils';
+import { commitChanges, hasUnstagedChanges } from '../../utils/git-utils';
 import { promptConfirm } from '../../utils/prompt-utils';
 
 /**
  * Updates Dialog component for PrimeNG v18
  */
-export function updateDialogComponent(): Rule {
+export function updateDialogComponent(options: Schema = {}): Rule {
+  // Track if we had unstaged changes at the start
+  let hadUnstagedChanges = false;
+  
   return async (tree: Tree, context: SchematicContext) => {
-    const confirmation = await promptConfirm(
-      'Do you want to update Dialog component for PrimeNG v18?'
-    );
+    // Skip the confirmation prompt if this is part of a parent migration
+    let proceed = true;
+    if (!options.partOfParentMigration) {
+      proceed = await promptConfirm(
+        'Do you want to update Dialog component for PrimeNG v18?'
+      );
+      
+      if (!proceed) {
+        context.logger.info('Skipping Dialog component updates');
+        return tree;
+      }
+    }
 
-    if (!confirmation) {
-      context.logger.info('Skipping Dialog component updates');
-      return tree;
+    // Skip Git checks if this is part of a parent migration or skipGitCheck is true
+    if (!options.partOfParentMigration && !options.skipGitCheck) {
+      // Check for unstaged changes before beginning
+      hadUnstagedChanges = hasUnstagedChanges();
+      if (hadUnstagedChanges) {
+        context.logger.warn('Unstaged Git changes detected. Changes made by this migration will not be auto-committed.');
+      } else {
+        context.logger.info('No unstaged Git changes detected. You will be prompted to commit changes after migration.');
+      }
     }
 
     context.logger.info('Updating Dialog component for PrimeNG v18...');
@@ -29,6 +49,41 @@ export function updateDialogComponent(): Rule {
     updateCssClasses(tree, context);
     
     context.logger.info('Dialog component updates completed');
+
+    // Skip commit operations if this is part of a parent migration or skipCommit is true
+    if (options.partOfParentMigration || options.skipCommit) {
+      return tree;
+    }
+
+    // Only offer to commit if there were no unstaged changes before we started
+    if (!hadUnstagedChanges) {
+      context.logger.info('Migration completed successfully.');
+      
+      // Ask user if they want to commit the changes
+      const commitConfirmation = await promptConfirm(
+        'Do you want to commit the migration changes?',
+        true
+      );
+      
+      if (commitConfirmation) {
+        context.logger.info('Attempting to commit changes...');
+        
+        // Directly commit changes without setTimeout
+        const commitSuccess = commitChanges(
+          'feat(primeng18): update Dialog component for v18', 
+          context.logger
+        );
+        
+        if (commitSuccess) {
+          context.logger.info('Changes have been committed successfully');
+        } else {
+          context.logger.error('Failed to commit changes');
+        }
+      } else {
+        context.logger.info('Changes were not committed');
+      }
+    }
+    
     return tree;
   };
 }
@@ -56,8 +111,12 @@ function updateModuleImports(tree: Tree, context: SchematicContext): void {
     
     // No module name changes for Dialog, but we might need to update imports
     // if there are any breaking changes in the future
+    const updatedContent = content;
     
-    tree.overwrite(filePath, content);
+    // Only write if content has changed
+    if (updatedContent !== content) {
+      tree.overwrite(filePath, updatedContent);
+    }
   }
 }
 
@@ -90,7 +149,10 @@ function updateComponentProperties(tree: Tree, context: SchematicContext): void 
     
     // Add any other property migrations here
     
-    tree.overwrite(filePath, updatedContent);
+    // Only write if content has changed
+    if (updatedContent !== content) {
+      tree.overwrite(filePath, updatedContent);
+    }
   }
 }
 
@@ -120,6 +182,9 @@ function updateCssClasses(tree: Tree, context: SchematicContext): void {
     const updatedContent = content
       .replace(/\.p-dialog-titlebar/g, '.p-dialog-header');
     
-    tree.overwrite(filePath, updatedContent);
+    // Only write if content has changed
+    if (updatedContent !== content) {
+      tree.overwrite(filePath, updatedContent);
+    }
   }
 } 

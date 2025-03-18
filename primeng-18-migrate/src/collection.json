@@ -36,10 +36,6 @@
       "description": "Migrate Sidebar to Drawer component",
       "factory": "./primeng-18-migrate/migrations/sidebar-drawer/index#migrateSidebarToDrawer"
     },
-    "sidebar-to-dialog": {
-      "description": "Migrate Sidebar to Dialog component",
-      "factory": "./primeng-18-migrate/migrations/sidebar-dialog/index#migrateSidebarToDialog"
-    },
     "inlinemessage-to-message": {
       "description": "Migrate InlineMessage to Message component",
       "factory": "./primeng-18-migrate/migrations/inlinemessage-message/index#migrateInlineMessageToMessage"
